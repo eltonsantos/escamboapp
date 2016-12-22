@@ -12,6 +12,8 @@ gem 'rails', '~> 5.0.1'
 gem 'rails-i18n'
 gem 'thor', '0.19.1'
 gem 'foreman'
+gem 'devise'
+gem 'devise-i18n'
 
 # Use sqlite3 as the database for Active Record
 gem 'sqlite3'
