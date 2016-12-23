@@ -15,8 +15,12 @@ gem 'foreman'
 gem 'devise'
 gem 'devise-i18n'
 gem 'bootstrap_sb_admin_base_v2'
-gem 'rails-assets-bootstrap', '3.3.7', source: 'https://rails-assets.org'
-gem 'rails-assets-notifyjs', source: 'https://rails-assets.org'
+
+source 'https://rails-assets.org' do
+  gem 'rails-assets-bootstrap', '3.3.7'
+  gem 'rails-assets-notifyjs'
+  gem 'rails-assets-bootbox'
+end
 
 # Use sqlite3 as the database for Active Record
 gem 'sqlite3'
@@ -58,6 +62,7 @@ group :development do
   # Spring speeds up development by keeping your application running in the background. Read more: https://github.com/rails/spring
   gem 'spring'
   gem 'spring-watcher-listen', '~> 2.0.0'
+  gem 'faker'
 end
 
 # Windows does not include zoneinfo files, so bundle the tzinfo-data gem
