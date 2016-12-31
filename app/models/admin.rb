@@ -5,6 +5,9 @@ class Admin < ApplicationRecord
   devise :database_authenticatable, :registerable,
          :recoverable, :rememberable, :trackable, :validatable
 
+  scope :with_full_access, -> { where(role: 0) }
+  scope :with_restricted_access, -> { where(role: 1) }
+
   # def description_role
   #   if self.role == 'full_access'
   #     'Acesso completo'
