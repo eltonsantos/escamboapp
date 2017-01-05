@@ -1,6 +1,5 @@
 class Backoffice::AdminsController < BackofficeController
   before_action :set_admin, only: [:edit, :update, :destroy]
-
   after_action :verify_authorized, only: [:new, :destroy]
   after_action :verify_policy_scoped, only: :index
 
@@ -17,7 +16,7 @@ class Backoffice::AdminsController < BackofficeController
   def create
     @admin = Admin.new(params_admin)
     if @admin.save
-      redirect_to backoffice_admins_path, notice: "O administrador #{@admin.email} foi cadastrado com sucesso!"
+      redirect_to backoffice_admins_path, notice: "O administrador #{@admin.name} foi cadastrado com sucesso!"
     else
       render :new
     end
@@ -28,7 +27,10 @@ class Backoffice::AdminsController < BackofficeController
 
   def update
     if @admin.update(params_admin)
-      redirect_to backoffice_admins_path, notice: "O administrador #{@admin.email} foi atualizado com sucesso!"
+
+      AdminMailer.update_email(current_admin, @admin).deliver_now
+
+      redirect_to backoffice_admins_path, notice: "O administrador #{@admin.name} foi atualizado com sucesso!"
     else
       render :edit
     end
@@ -52,15 +54,19 @@ class Backoffice::AdminsController < BackofficeController
     end
 
     def params_admin
-
-      passwd = params[:admin][:password]
-      passwd_confirmation = params[:admin][:password_confirmation]
-
-      if passwd.blank? && passwd_confirmation.blank?
+      if password_blank?
         params[:admin].except!(:password, :password_confirmation)
       end
+      if @admin.blank?
+        params.require(:admin).permit(:name, :email, :role, :password, :password_confirmation)
+      else
+        params.require(:admin).permit(policy(@admin).permitted_attributes)
+      end
+    end
 
-      params.require(:admin).permit(policy(@admin).permitted_attributes)
+    def password_blank?
+      params[:admin][:password].blank? &&
+      params[:admin][:password_confirmation].blank?
     end
 
 end
